@@ -29,31 +29,47 @@ def is_present_simple(sent):
         
         return True
     
-    if root.pos_ == "AUX":
+    if root.pos_ == "AUX" and root.lemma_ == "be":
+        auxes = [t for t in root.children if t.dep_ == "aux"]
+
+        if len(auxes) > 0:
+            return False
+
         root_form, root_obj = findVerb(root)
 
-    
+        if root_form not in [VerbForm.BASE, VerbForm.THIRDP]:
+            return False
+        
+        return True
+
     return False
 
 
 def handle(sent, source):
-    res = is_present_simple(sent)
+    def test(func, sent, current_source: str, task_source: str, tag: str):
+        res = is_present_simple(sent)
 
-    if res == False and source == "data/present_simple.txt":
-        print(sent, source)
-        return False
+        if res == False and current_source == task_source:
+            print(tag, sent, current_source)
+            return False
 
-    if res == True and source != "data/present_simple.txt":
-        print(sent, source)
-        return False
-    
-    return True
+        if res == True and current_source != task_source:
+            print(tag, sent, current_source)
+            return False
+        
+        return True
 
-total = 0
+    global wrong_cnt
+    res = test(is_present_simple, sent, source, "data/present_simple.txt", "PRESENT_SIMPLE")
+    wrong_cnt += 0 if res else 1
+
+
+wrong_cnt = 0
 for source in all_sources:
     with (open(source, mode="r")) as f:
         for line in f:
-            res = handle(next(nlp(line.strip()).sents), source)
-            total += 0 if res else 1
-print("Wrong detections count:", total)
+            handle(next(nlp(line.strip()).sents), source)
+
+print("Wrong detections count:", wrong_cnt)
+
 

@@ -138,7 +138,6 @@ def findVerb(token):
         form = VerbForm.THIRDP
 
     if token.lemma_ == "be":
-        print("BE:", token.tag_, token.text)
         return form, None
 
     if norm not in verbs:

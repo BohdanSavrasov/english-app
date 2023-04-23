@@ -11,6 +11,7 @@
 /build
 /captures
 .externalNativeBuild
-.cxx
+*.cxx
 local.properties
-.jks
+*.jks
+/data/__pycache__

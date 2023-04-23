@@ -18,7 +18,8 @@ import com.example.android.bbcenglishlearningapp.ui.theme.MainBackground
 
 
 @Composable
-fun MatchingScreen() {
+fun MatchingScreen(testtext: String) {
+
     var model by remember { mutableStateOf(
         MatchingModel(
             listOf(
@@ -68,6 +69,8 @@ fun MatchingScreen() {
             )
 
             Spacer(modifier = Modifier.weight(1f))
+
+            Text(testtext)
 
             MatchingLayout(
                 model = model,

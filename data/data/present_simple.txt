@@ -1,0 +1,251 @@
+I enjoy reading books.
+She plays tennis every weekend.
+He wakes up early every morning.
+They study English at school.
+We love to travel.
+The sun rises in the east.
+Cats like to nap in the sun.
+Dogs are loyal companions.
+The earth orbits around the sun.
+We eat breakfast every day.
+My parents live in the city.
+The sky is blue on a sunny day.
+I work in an office.
+She sings in a choir.
+He drinks coffee in the morning.
+They enjoy watching movies.
+We go to the gym three times a week.
+The ocean is vast and deep.
+Children love to play games.
+Trees provide shade and oxygen.
+I cook dinner for my family.
+She dances salsa on the weekends.
+He plays guitar in a band.
+They hike in the mountains.
+We swim in the pool in the summer.
+The moon reflects sunlight at night.
+Birds fly in the sky.
+Fish live in water.
+The wind blows through the trees.
+We listen to music every day.
+My sister speaks Spanish fluently.
+The seasons change every year.
+She teaches yoga classes.
+He runs a marathon every year.
+They volunteer at a shelter.
+We read the news online.
+The beach is a popular destination.
+Flowers bloom in the spring.
+I watch TV in the evenings.
+She studies for exams every day.
+He works on his computer.
+They enjoy hiking in nature.
+We take the bus to work.
+The sky is full of stars at night.
+My brother plays basketball.
+The sun sets in the west.
+She meditates in the morning.
+He plays chess with his friends.
+They attend concerts regularly.
+We write emails to stay in touch.
+I do not like spicy food.
+He does not speak French fluently.
+They do not live in the city center.
+She does not work on weekends.
+We do not eat meat.
+You do not understand the instructions.
+The sun does not always shine in England.
+My brother does not enjoy playing video games.
+The cat does not like water.
+The train does not stop at that station.
+We do not usually go out on weekdays.
+She does not have a car.
+He does not drink coffee.
+They do not watch TV in the morning.
+I do not play basketball.
+The restaurant does not serve breakfast.
+My parents do not like traveling by plane.
+The movie does not start until 8 pm.
+The teacher does not allow phones in class.
+We do not own a dog.
+He does not enjoy going to the gym.
+They do not listen to classical music.
+I do not smoke.
+The weather does not look good today.
+She does not have any siblings.
+We do not use plastic bags.
+You do not need to bring anything to the party.
+The book does not belong to me.
+He does not know how to cook.
+They do not celebrate Christmas.
+I do not work for that company anymore.
+The cat does not like to be alone.
+We do not have a garden.
+She does not play any musical instruments.
+The bus does not run on Sundays.
+The shop does not sell alcohol.
+He does not speak to his ex-girlfriend.
+They do not like horror movies.
+I do not have a sweet tooth.
+The restaurant does not accept credit cards.
+We do not own a TV.
+She does not wear glasses.
+The train does not arrive until 10 pm.
+The dog does not like to be left alone.
+He does not watch sports on TV.
+They do not eat seafood.
+I do not speak Spanish.
+The supermarket does not open until 9 am.
+We do not have any pets.
+She does not enjoy going to the theater.
+I don't drink coffee.
+He doesn't like spicy food.
+She doesn't play soccer.
+We don't watch TV.
+They don't speak Spanish.
+It doesn't rain very often in this city.
+My brother doesn't smoke.
+The cat doesn't like water.
+I don't have a car.
+She doesn't work on weekends.
+They don't live in the same city as us.
+He doesn't listen to heavy metal music.
+We don't eat meat.
+The movie doesn't start until 8 pm.
+I don't understand the instructions.
+She doesn't have any pets.
+They don't go to the gym regularly.
+The train doesn't stop at that station.
+He doesn't wear glasses.
+We don't usually go out on weekdays.
+It doesn't snow here in winter.
+The book doesn't have a happy ending.
+My sister doesn't like horror movies.
+The restaurant doesn't serve breakfast.
+I don't enjoy jogging.
+He doesn't speak French fluently.
+She doesn't have a lot of free time.
+They don't celebrate Christmas.
+It doesn't take long to get there by car.
+We don't usually eat out at fancy restaurants.
+The museum doesn't open on Mondays.
+I don't own a motorcycle.
+She doesn't watch sports on TV.
+They don't have any children.
+He doesn't like seafood.
+We don't play board games often.
+The store doesn't accept credit cards.
+It doesn't matter what color you choose.
+My parents don't live in the same country.
+I don't know how to play the guitar.
+She doesn't like to dance.
+They don't smoke cigars.
+He doesn't drive a manual car.
+We don't have any siblings.
+The hotel doesn't offer room service.
+I don't wear hats.
+She doesn't like to wear makeup.
+They don't have any allergies.
+It doesn't cost much to get there by bus.
+We don't stay up late on weekdays.
+Do you like to eat pizza?
+Do you have any siblings?
+Do you enjoy reading books?
+Do you play any musical instruments?
+Do you watch TV regularly?
+Do you live in a house or an apartment?
+Do you prefer coffee or tea?
+Do you have any pets?
+Do you speak any other languages?
+Do you like to go to the gym?
+Do you have a favorite sport?
+Do you like to cook?
+Do you enjoy going to concerts?
+Do you have any allergies?
+Do you believe in ghosts?
+Do you have any phobias?
+Do you like to go hiking?
+Do you enjoy traveling?
+Do you have a favorite color?
+Do you play video games?
+Do you have a favorite movie?
+Do you like to dance?
+Do you have any tattoos?
+Do you enjoy going to the beach?
+Do you like to listen to music?
+Do you have a favorite book?
+Do you like to go to museums?
+Do you enjoy gardening?
+Do you have a favorite TV show?
+Do you have any hobbies?
+Do you like to exercise?
+Do you have a favorite food?
+Do you believe in aliens?
+Do you like to go camping?
+Do you have any children?
+Do you enjoy playing board games?
+Do you have a favorite animal?
+Do you like to watch sports?
+Do you have a favorite type of music?
+Do you enjoy shopping?
+Do you have a favorite holiday?
+Do you like to ski or snowboard?
+Do you enjoy going to the theater?
+Do you have any medical conditions?
+Do you like to swim?
+Do you have a favorite season?
+Do you like to watch documentaries?
+Do you have a favorite comedian?
+Do you enjoy going to the park?
+Do you have a favorite type of cuisine?
+Does he like pizza?
+Does she play guitar?
+Does it rain often in this city?
+Does your brother live nearby?
+Does your sister enjoy reading books?
+Does your father work on weekends?
+Does your mother like to cook?
+Does the dog bark a lot?
+Does the cat sleep all day?
+Does the bird chirp in the morning?
+Does the fish need to be fed twice a day?
+Does the plant need water?
+Does your boss expect you to work overtime?
+Does your coworker speak another language?
+Does your teacher give a lot of homework?
+Does your friend enjoy hiking?
+Does the movie start at 7 pm?
+Does the concert sell out quickly?
+Does the museum close on Mondays?
+Does the library have a children's section?
+Does the restaurant serve vegetarian food?
+Does the gym offer yoga classes?
+Does the store have a return policy?
+Does the park have a playground?
+Does the beach have a lifeguard?
+Does the hotel have a pool?
+Does the airport have free Wi-Fi?
+Does the train run on time?
+Does the bus stop here?
+Does the taxi take credit cards?
+Does the ferry operate on weekends?
+Does the hospital have a 24-hour emergency room?
+Does the university offer scholarships?
+Does the company provide health insurance?
+Does the government offer tax breaks for small businesses?
+Does the law allow for same-sex marriage?
+Does the policy cover pre-existing conditions?
+Does the procedure require anesthesia?
+Does the medication have any side effects?
+Does the supplement improve cognitive function?
+Does the exercise reduce stress?
+Does the therapy treat anxiety?
+Does the diet increase energy levels?
+Does the hobby require expensive equipment?
+Does the sport require a lot of practice?
+Does the game have multiplayer mode?
+Does the book have a happy ending?
+Does the magazine publish new issues monthly?
+Does the newspaper report on local events?
+Does the website have a search function?
+He hasn't a slender nose, a narrow mouth, and tight blond curls.

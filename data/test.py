@@ -76,28 +76,59 @@ def is_present_continuous(sent):
     return True
 
 
+def is_present_perfect(sent):
+    root = sent.root
+
+    if root is None:
+        return False
+    
+    if root.pos_ not in ["VERB", "AUX"]:
+        return False
+    
+    root_form, root_obj = findVerb(root)
+
+    if root_form not in [VerbForm.PAST_PART]:
+        return False
+    
+    auxes = [t for t in root.children if t.dep_ == "aux"]
+
+    if len(auxes) != 1:
+        return False
+    
+    if auxes[0].lemma_ != 'have':
+        return False
+
+    aux_form, aux_obj = findVerb(auxes[0])
+
+    if aux_form not in [VerbForm.BASE, VerbForm.THIRDP]:
+        return False
+
+    return True
+
+
 def handle(sent, source):
     def test(func, sent, current_source: str, task_source: str, tag: str):
         res = func(sent)
 
         if res == False and current_source == task_source:
-            print(tag, sent, current_source, "False, must be True")
+            print(tag, sent, current_source, "False")
             return False
 
         if res == True and current_source != task_source:
-            print(tag, sent, current_source, "True, must be False")
+            print(tag, sent, current_source, "True")
             return False
 
         return True
 
     global wrong_cnt
 
-    res = test(is_present_simple, sent, source,
-               "data/present_simple.txt", "PRESENT_SIMPLE")
+    res = test(is_present_simple, sent, source, "data/present_simple.txt", "PRESENT_SIMPLE")
     wrong_cnt += 0 if res else 1
 
-    res = test(is_present_continuous, sent, source,
-               "data/present_continuous.txt", "PRESENT_CONTINUOUS")
+    res = test(is_present_continuous, sent, source, "data/present_continuous.txt", "PRESENT_CONTINUOUS")
+    wrong_cnt += 0 if res else 1
+
+    res = test(is_present_perfect, sent, source, "data/present_perfect.txt", "PRESENT_PERFECT")
     wrong_cnt += 0 if res else 1
 
 

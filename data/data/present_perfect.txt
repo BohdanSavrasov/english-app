@@ -51,7 +51,6 @@ They have bought a new house.
 I haven't finished my homework yet.
 She hasn't responded to my email.
 They haven't visited us in months.
-He hasn't completed the project on time.
 We haven't seen each other for a long time.
 The company hasn't made any profits this quarter.
 She hasn't lost any weight despite exercising regularly.
@@ -66,17 +65,14 @@ We haven't had any luck finding a new apartment.
 The restaurant hasn't received many customers today.
 She hasn't been to the gym in a while.
 They haven't fixed the leaking faucet yet.
-He hasn't had time to take a vacation this year.
 We haven't watched any good movies recently.
 The children haven't cleaned their room yet.
-She hasn't bought any new clothes in a while.
 They haven't found a solution to the problem yet.
 He hasn't had a chance to meet the new boss.
 We haven't received any news from our relatives overseas.
 The project hasn't been approved by the board yet.
 She hasn't been able to quit smoking.
 They haven't visited the new art museum in town.
-He hasn't fixed the broken fence in the backyard.
 We haven't practiced our French in a long time.
 The weather hasn't been very good for outdoor activities.
 She hasn't found a job in her field yet.
@@ -91,13 +87,22 @@ We haven't bought any new furniture for the living room.
 The car hasn't been serviced in a while.
 She hasn't learned how to swim yet.
 They haven't sold the old house yet.
-He hasn't won any awards for his work.
 We haven't tried the new restaurant in town.
 The hotel hasn't received any complaints from guests.
 She hasn't been able to get a good night's sleep.
 They haven't found a replacement for the broken phone.
 He hasn't heard from his ex-girlfriend in months.
 We haven't seen any wildlife during our camping trip.
+He hasn't eaten breakfast yet.
+I haven't visited my grandparents in a long time.
+They haven't finished their project on time.
+She hasn't found her keys yet.
+He hasn't received any response to his job application.
+I haven't had a chance to go to the gym this week.
+They haven't been to the new restaurant in town yet.
+She hasn't taken her medicine this morning.
+He hasn't learned how to swim yet.
+I haven't read that book yet.
 Have you finished your homework yet?
 Have you ever been to Europe?
 Have you eaten breakfast this morning?

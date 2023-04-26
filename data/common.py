@@ -160,6 +160,8 @@ def findVerb(token):
 
 def show(sent):
     doc = nlp(sent)
+    for token in doc:
+        print(token.text, token.tag_)
     displacy.serve(doc)
 
 

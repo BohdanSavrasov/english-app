@@ -82,7 +82,7 @@ def is_present_perfect(sent):
     if root is None:
         return False
     
-    if root.pos_ not in ["VERB", "AUX"]:
+    if not root.tag_.startswith("VB"):
         return False
     
     root_form, root_obj = findVerb(root)
@@ -103,6 +103,31 @@ def is_present_perfect(sent):
     if aux_form not in [VerbForm.BASE, VerbForm.THIRDP]:
         return False
 
+    return True
+
+
+def is_present_perfect_continuous(sent):
+    root = sent.root
+
+    if root is None:
+        return False
+    
+    if not root.tag_.startswith("VB"):
+        return False
+    
+    root_form, root_obj = findVerb(root)
+
+    if root_form not in [VerbForm.PRESENT_PART]:
+        return False
+    
+    auxes = [t for t in root.children if t.dep_ == "aux"]
+
+    if len(auxes) != 2:
+        return False
+    
+    if not (auxes[0].lemma_ == "have" and auxes[1].lemma_ == "be"):
+        return False
+    
     return True
 
 
@@ -129,6 +154,9 @@ def handle(sent, source):
     wrong_cnt += 0 if res else 1
 
     res = test(is_present_perfect, sent, source, "data/present_perfect.txt", "PRESENT_PERFECT")
+    wrong_cnt += 0 if res else 1
+
+    res = test(is_present_perfect_continuous, sent, source, "data/present_perfect_cont.txt", "PRESENT_PERFECT_CONTINUOUS")
     wrong_cnt += 0 if res else 1
 
 

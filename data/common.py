@@ -126,6 +126,9 @@ def findVerb(token):
 
     if token.lower_ == "did" and token.tag_ == "VBD":
         norm = "did"
+    
+    if token.lower_ == "had" and token.tag_ == "VBD":
+        norm = "had"
 
     form = VerbForm.BASE
     if token.tag_ == "VBD":
@@ -149,7 +152,7 @@ def findVerb(token):
     try:
         obj = next(obj for obj in verbObjSet if obj[form] == norm)
     except:
-        raise Exception(token, token.lex.norm_, token.sent, form, verbObjSet)
+        raise Exception(token, token.sent, form, norm, verbObjSet)
 
     if obj is None:
         print(token, form, token.sent, token.tag_,
@@ -161,7 +164,12 @@ def findVerb(token):
 def show(sent):
     doc = nlp(sent)
     for token in doc:
-        print(token.text, token.tag_)
+        if token.tag_.startswith("VB"):
+            vbform, _ = findVerb(token)
+            print(token.text, token.tag_, vbform)
+        else:
+            print(token.text, token.tag_)
+        
     displacy.serve(doc)
 
 

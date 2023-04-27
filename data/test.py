@@ -131,6 +131,35 @@ def is_present_perfect_continuous(sent):
     return True
 
 
+def is_past_simple(sent):
+    root = sent.root
+
+    if root is None:
+        return False
+    
+    if not root.tag_.startswith("VB"):
+        return False
+    
+    root_form, root_obj = findVerb(root)
+
+    auxes = [t for t in root.children if t.dep_ == "aux"]
+
+    with_main_verb_be = len(auxes) == 0 and root.lemma_ == "be" and root_form == VerbForm.PAST
+    is_positive = len(auxes) == 0 and root_form == VerbForm.PAST
+    is_negative_or_question = False
+
+    if len(auxes) == 1 and auxes[0].lemma_ == "do":
+        aux_form, aux_obj = findVerb(auxes[0])
+        is_negative_or_question = aux_form == VerbForm.PAST and root_form == VerbForm.BASE
+    
+    is_past_simple = with_main_verb_be or (is_positive or is_negative_or_question)
+
+    if not is_past_simple:
+        return False
+
+    return True
+
+
 def handle(sent, source):
     def test(func, sent, current_source: str, task_source: str, tag: str):
         res = func(sent)
@@ -159,6 +188,8 @@ def handle(sent, source):
     res = test(is_present_perfect_continuous, sent, source, "data/present_perfect_cont.txt", "PRESENT_PERFECT_CONTINUOUS")
     wrong_cnt += 0 if res else 1
 
+    res = test(is_past_simple, sent, source, "data/past_simple.txt", "PAST_SIMPLE")
+    wrong_cnt += 0 if res else 1
 
 wrong_cnt = 0
 for source in all_sources:

@@ -9,7 +9,6 @@ He will learn to play the guitar.
 We will host a big family gathering this summer.
 She will volunteer at a local soup kitchen.
 They will take a trip around the world.
-He will get promoted at work.
 We will start a community garden in our neighborhood.
 She will take up painting as a hobby.
 They will take their kids to Disney World.
@@ -55,7 +54,6 @@ He won't learn to swim this year.
 We won't forget your birthday.
 The sun won't set until late tonight.
 You won't regret your decision.
-The movie won't be released until next year.
 I won't be able to attend the meeting.
 She won't take the job offer.
 They won't succeed without a plan.
@@ -87,7 +85,6 @@ He won't be late for the meeting.
 We won't finish the book by tomorrow.
 The computer won't function without the proper software.
 You won't pass the exam if you don't study.
-The concert won't be rescheduled.
 I won't drink coffee after 6 pm.
 She won't change her mind about the decision.
 They won't invite him to the party.
@@ -148,7 +145,6 @@ We will not settle for mediocrity.
 You will not be able to change my mind.
 The company will not sacrifice quality for profit.
 She will not back down from a challenge.
-Will you be attending the party tomorrow?
 Will you travel to Europe next summer?
 Will he finish his project on time?
 Will she start her new job next week?
@@ -198,3 +194,9 @@ Will it be rainy tomorrow?
 Will we go camping this summer?
 Will they start a family soon?
 Will you graduate from high school next year?
+Will it be foggy in the morning?
+Will it be windy outside tomorrow?
+Will it be sunny this weekend?
+The library won't be open late on Fridays anymore.
+By the end of the year, I will be debt-free.
+By the end of the year, I will be fluent in French.

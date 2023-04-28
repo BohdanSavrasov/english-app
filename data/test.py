@@ -257,6 +257,31 @@ def is_past_perfect_continuous(sent):
     return True
 
 
+def is_future_simple(sent):
+    root = sent.root
+
+    if root is None:
+        return False
+    
+    if not root.tag_.startswith("VB"):
+        return False
+    
+    root_form, root_obj = findVerb(root)
+
+    if root_form != VerbForm.BASE:
+        return False
+    
+    auxes = [t for t in root.children if t.dep_ == "aux"]
+
+    if len(auxes) != 1:
+        return False
+    
+    if auxes[0].lemma_ != "will":
+        return False
+
+    return True
+
+
 def handle(sent, source):
     def test(func, sent, current_source: str, task_source: str, tag: str):
         res = func(sent)
@@ -295,6 +320,9 @@ def handle(sent, source):
     wrong_cnt += 0 if res else 1
 
     res = test(is_past_perfect_continuous, sent, source, "data/past_perfect_continuous.txt", "PAST_PERFECT_CONTINUOUS")
+    wrong_cnt += 0 if res else 1
+
+    res = test(is_future_simple, sent, source, "data/future_simple.txt", "FUTURE_SIMPLE")
     wrong_cnt += 0 if res else 1
 
 wrong_cnt = 0

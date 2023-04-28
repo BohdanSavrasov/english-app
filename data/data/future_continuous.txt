@@ -61,7 +61,6 @@ In five years, I will be starting my own business.
 Next weekend, I will be hiking in the mountains.
 By the time I retire, I will be living in a beautiful beach house.
 This time next month, I will be running a marathon.
-By the end of the year, I will be fluent in French.
 Next semester, I will be studying abroad.
 This time tomorrow, I will be attending my best friend's wedding.
 In a few days, I will be volunteering at a local animal shelter.
@@ -89,7 +88,6 @@ This time tomorrow, I will be attending a concert.
 By this time next week, I will be finished with a big project at work.
 Next semester, I will be learning how to code.
 In a few minutes, I will be enjoying a cup of tea.
-By the end of the year, I will be debt-free.
 This time next month, I will be starting a new fitness program.
 Next week, I will be taking a dance class.
 In a few hours, I will be attending a networking event.
@@ -185,7 +183,6 @@ They won't be taking a vacation to the beach this summer.
 She won't be watching the football game with her friends later.
 He won't be going to the gym after work tomorrow.
 We won't be taking a dance class together next month.
-The library won't be open late on Fridays anymore.
 My coworkers won't be having a potluck lunch next week.
 The theater won't be showing the new movie this weekend.
 I won't be participating in the charity walk this year.
@@ -227,12 +224,10 @@ Will you be going for a jog tomorrow?
 Will they be volunteering at a shelter this weekend?
 Will she be taking a dance class next week?
 Will he be going on a trip next month?
-Will it be sunny this weekend?
 Will you be trying a new recipe tonight?
 Will they be renovating their home this year?
 Will she be painting a picture tomorrow?
 Will he be taking a nap later?
-Will it be windy outside tomorrow?
 Will you be gardening this weekend?
 Will they be adopting a pet soon?
 Will she be attending a concert next month?
@@ -247,4 +242,4 @@ Will you be exploring a new city next year?
 Will they be donating to charity this month?
 Will she be giving a presentation tomorrow?
 Will he be meeting with clients next week?
-Will it be foggy in the morning?
+Will you be attending the party tomorrow?

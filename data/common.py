@@ -161,8 +161,8 @@ def findVerb(token):
     return form, obj
 
 
-def show(sent):
-    doc = nlp(sent)
+def show(text):
+    doc = nlp(text)
     for token in doc:
         if token.tag_.startswith("VB"):
             vbform, _ = findVerb(token)

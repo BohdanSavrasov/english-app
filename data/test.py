@@ -307,6 +307,31 @@ def is_future_continuous(sent):
     return True
 
 
+def is_future_perfect(sent):
+    root = sent.root
+
+    if root is None:
+        return False
+    
+    if not root.tag_.startswith("VB"):
+        return False
+    
+    root_form, root_obj = findVerb(root)
+
+    if root_form != VerbForm.PAST_PART:
+        return False
+    
+    auxes = [t for t in root.children if t.dep_ == "aux"]
+
+    if len(auxes) != 2:
+        return False
+    
+    if auxes[0].norm_ != "will" or auxes[1].norm_ != "have":
+        return False
+    
+    return True
+
+
 def handle(sent, source):
     def test(func, sent, current_source: str, task_source: str, tag: str):
         res = func(sent)
@@ -352,6 +377,10 @@ def handle(sent, source):
 
     res = test(is_future_continuous, sent, source, "data/future_continuous.txt", "FUTURE_CONTINUOUS")
     wrong_cnt += 0 if res else 1
+
+    res = test(is_future_perfect, sent, source, "data/future_perfect.txt", "FUTURE_PERFECT")
+    wrong_cnt += 0 if res else 1
+
 
 wrong_cnt = 0
 for source in all_sources:

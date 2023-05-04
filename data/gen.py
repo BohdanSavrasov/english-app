@@ -7,42 +7,29 @@ def is_present_simple(sent):
     if root is None:
         return False
 
-    if root.pos_ == "VERB":
-        root_form, root_obj = findVerb(root)
+    if not root.tag_.startswith("VB"):
+        return False
 
-        if root_form not in {VerbForm.BASE, VerbForm.THIRDP}:
+    root_form, root_obj = findVerb(root)
+
+    if root_form not in [VerbForm.BASE, VerbForm.THIRDP]:
+        return False
+
+    auxes = [t for t in root.children if t.dep_ == "aux"]
+
+    if len(auxes) > 1:
+        return False
+
+    if len(auxes) == 1:
+        aux_form, aux_obj = findVerb(auxes[0])
+
+        if aux_form not in [VerbForm.BASE, VerbForm.THIRDP]:
             return False
 
-        auxes = [t for t in root.children if t.dep_ == "aux"]
-
-        if len(auxes) > 1:
+        if aux_obj[VerbForm.BASE] != "do":
             return False
 
-        if len(auxes) == 1:
-            aux_form, aux_obj = findVerb(auxes[0])
-
-            if aux_form not in {VerbForm.BASE, VerbForm.THIRDP}:
-                return False
-
-            if aux_obj[VerbForm.BASE] != "do":
-                return False
-
-        return True
-
-    if root.pos_ == "AUX" and root.lemma_ == "be":
-        auxes = [t for t in root.children if t.dep_ == "aux"]
-
-        if len(auxes) > 0:
-            return False
-
-        root_form, root_obj = findVerb(root)
-
-        if root_form not in [VerbForm.BASE, VerbForm.THIRDP]:
-            return False
-
-        return True
-
-    return False
+    return True
 
 
 def is_present_continuous(sent):

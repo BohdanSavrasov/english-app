@@ -12,7 +12,7 @@ def is_present_simple(sent):
 
     root_form, root_obj = findVerb(root)
 
-    if root_form not in [VerbForm.BASE, VerbForm.THIRDP]:
+    if root_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
         return False
 
     auxes = [t for t in root.children if t.dep_ == "aux"]
@@ -21,12 +21,12 @@ def is_present_simple(sent):
         return False
 
     if len(auxes) == 1:
+        if auxes[0].lemma_ != "do":
+            return False
+        
         aux_form, aux_obj = findVerb(auxes[0])
 
-        if aux_form not in [VerbForm.BASE, VerbForm.THIRDP]:
-            return False
-
-        if aux_obj[VerbForm.BASE] != "do":
+        if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
             return False
 
     return True
@@ -38,7 +38,7 @@ def is_present_continuous(sent):
     if root is None:
         return False
 
-    if root.pos_ != "VERB":
+    if not root.tag_.startswith("VB"):
         return False
 
     form, obj = findVerb(root)
@@ -57,7 +57,7 @@ def is_present_continuous(sent):
 
         aux_form, aux_obj = findVerb(auxes[0])
 
-        if aux_form not in [VerbForm.BASE, VerbForm.THIRDP]:
+        if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
             return False
 
     return True
@@ -87,7 +87,7 @@ def is_present_perfect(sent):
 
     aux_form, aux_obj = findVerb(auxes[0])
 
-    if aux_form not in [VerbForm.BASE, VerbForm.THIRDP]:
+    if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
         return False
 
     return True
@@ -118,7 +118,10 @@ def is_present_perfect_continuous(sent):
     have_form, have_obj = findVerb(auxes[0])
     be_form, be_obj = findVerb(auxes[1])
 
-    if have_form not in [VerbForm.BASE, VerbForm.THIRDP] or be_form != VerbForm.PAST_PART:
+    if have_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
+        return False
+    
+    if be_form != VerbForm.PAST_PART:
         return False
     
     return True

@@ -22,92 +22,99 @@ all_sources = [
 
 class VerbForm(Enum):
     BASE = 0
-    THIRDP = 1
-    PRESENT_PART = 2
-    PAST = 3
-    PAST_PART = 4
+    NONTHIRDP = 1
+    THIRDP = 2
+    PRESENT_PART = 3
+    PAST = 4
+    PAST_PART = 5
 
 
 class VerbsObj():
 
     def __init__(
         self,
-        base: str,
-        thirdp: str,
-        present_part: str,
-        past: str,
-        past_part: str,
+        base: tuple,
+        nonthirdp: tuple,
+        thirdp: tuple,
+        present_part: tuple,
+        past: tuple,
+        past_part: tuple,
     ):
         self.base = base
+        self.nonthirdp = nonthirdp
         self.thirdp = thirdp
         self.present_part = present_part
         self.past = past
         self.past_part = past_part
 
     def key(self):
-        return self.base, self.thirdp, self.present_part, self.past
+        return self.base, self.nonthirdp, self.thirdp, self.present_part, self.past, self.past_part
 
     def __hash__(self):
         return hash(self.key())
 
     def __eq__(self, o):
-        if o is not VerbsObj:
+        if not isinstance(o, VerbsObj):
             return False
 
         return self.key() == o.key()
 
     def __iter__(self):
-        yield VerbForm.BASE, self.base
-        yield VerbForm.THIRDP, self.thirdp
-        yield VerbForm.PRESENT_PART, self.present_part
-        yield VerbForm.PAST, self.past
-        yield VerbForm.PAST_PART, self.past_part
+        for word in self.base:
+            yield VerbForm.BASE, word
+
+        for word in self.nonthirdp:
+            yield VerbForm.NONTHIRDP, word
+
+        for word in self.thirdp:
+            yield VerbForm.THIRDP, word
+
+        for word in self.present_part:
+            yield VerbForm.PRESENT_PART, word
+
+        for word in self.past:
+            yield VerbForm.PAST, word
+
+        for word in self.past_part:
+            yield VerbForm.PAST_PART, word
 
     def __str__(self):
-        texts = ','.join(text for form, text in self)
+        texts = ', '.join(f"{form.name}={word}" for form, word in self)
         return "VerbsObj({texts})".format(texts=texts)
 
     def __repr__(self):
         return self.__str__()
-
-    def __getitem__(self, item):
-        if item == self.base:
-            return VerbForm.BASE
-        elif item == self.thirdp:
-            return VerbForm.THIRDP
-        elif item == self.present_part:
-            return VerbForm.PRESENT_PART
-        elif item == self.past:
-            return VerbForm.PAST
-        elif item == self.past_part:
-            return VerbForm.PAST_PART
-        elif item == VerbForm.BASE:
-            return self.base
-        elif item == VerbForm.THIRDP:
-            return self.thirdp
-        elif item == VerbForm.PRESENT_PART:
-            return self.present_part
-        elif item == VerbForm.PAST:
-            return self.past
-        elif item == VerbForm.PAST_PART:
-            return self.past_part
-
-        raise KeyError(item)
+    
+    def hasVerbInForm(self, verb: str, form: VerbForm) -> bool:
+        if form == VerbForm.BASE:
+            return verb in self.base
+        elif form == VerbForm.NONTHIRDP:
+            return verb in self.nonthirdp
+        elif form == VerbForm.THIRDP:
+            return verb in self.thirdp
+        elif form == VerbForm.PRESENT_PART:
+            return verb in self.present_part
+        elif form == VerbForm.PAST:
+            return verb in self.past
+        elif form == VerbForm.PAST_PART:
+            return verb in self.past_part
+        
+        raise KeyError("No such key supported")
 
 
 def load_verbs_list():
     verbs = {}
     with open("data/verbs.csv", mode="r") as f:
         for line in f:
-            verbForms = line.strip().split(',')
+            verbForms = [tuple(w.split(";")) for w in line.strip().split(',')]
 
-            assert len(verbForms) == 5
+            assert len(verbForms) == 6
 
             verbObj = VerbsObj(
-                verbForms[0], verbForms[1], verbForms[4], verbForms[2], verbForms[3]
+                verbForms[0], verbForms[1], verbForms[2], verbForms[3], verbForms[4], verbForms[5]
             )
 
-            for form, text in verbObj:
+            for _, text in verbObj:
                 if text not in verbs:
                     verbs[text] = {verbObj}
                 else:
@@ -116,19 +123,22 @@ def load_verbs_list():
     return verbs
 
 
-def findVerb(token):
+def findVerb(token: spacy.tokens.token.Token):
     global verbs
 
     if token.pos_ not in ['AUX', 'VERB']:
         raise Exception("Token must be a verb or aux")
 
-    norm = token.norm_
+    norm: str = token.norm_
 
-    if token.lower_ == "did" and token.tag_ == "VBD":
+    if token.lower_ == "did" and token.lemma_ == "do":
         norm = "did"
     
-    if token.lower_ == "had" and token.tag_ == "VBD":
+    if token.lower_ == "had" and token.lemma_ == "have":
         norm = "had"
+    
+    if token.lower_ == "'s" and token.lemma_ == "be":
+        norm = "is"
 
     form = VerbForm.BASE
     if token.tag_ == "VBD":
@@ -137,20 +147,18 @@ def findVerb(token):
         form = VerbForm.PRESENT_PART
     if token.tag_ == "VBN":
         form = VerbForm.PAST_PART
+    if token.tag_ == "VBP":
+        form = VerbForm.NONTHIRDP
     if token.tag_ == "VBZ":
         form = VerbForm.THIRDP
 
-    if token.lemma_ == "be":
-        return form, None
-
     if norm not in verbs:
-        raise Exception("Verb '{verb}' is not in list. Sentence: '{sent}'".format(
-            verb=norm, sent=token.sent.text))
+        raise Exception(f"Verb '{norm}' is not in list. Sentence: '{token.sent.text}'")
 
     verbObjSet = verbs[norm]
 
     try:
-        obj = next(obj for obj in verbObjSet if obj[form] == norm)
+        obj = next(obj for obj in verbObjSet if obj.hasVerbInForm(norm, form))
     except:
         raise Exception(token, token.sent, form, norm, verbObjSet)
 

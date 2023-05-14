@@ -1,6 +1,10 @@
 from common import *
 import pickle
 import os
+import hashlib
+from datetime import datetime
+from dateutil import tz
+import subprocess
 
 
 def present_simple(sent):
@@ -13,7 +17,7 @@ def present_simple(sent):
         return None
 
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
         return None
@@ -32,9 +36,9 @@ def present_simple(sent):
         if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
             return None
         
-        found_verbs.append((aux_form, aux_obj))
+        found_verbs.append((auxes[0], aux_form, aux_obj))
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PRESENT)
 
 
 def present_continuous(sent):
@@ -47,7 +51,7 @@ def present_continuous(sent):
         return None
 
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
         return None
@@ -66,9 +70,9 @@ def present_continuous(sent):
         if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
             return None
         
-        found_verbs.append((aux_form, aux_obj))
+        found_verbs.append((auxes[0], aux_form, aux_obj))
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PRESENT_CONT)
 
 
 def present_perfect(sent):
@@ -81,7 +85,7 @@ def present_perfect(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form not in [VerbForm.PAST_PART]:
         return None
@@ -95,12 +99,12 @@ def present_perfect(sent):
         return None
 
     aux_form, aux_obj = findVerb(auxes[0])
-    found_verbs.append([(aux_form, aux_obj)])
+    found_verbs.append((auxes[0], aux_form, aux_obj))
 
     if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
         return None
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PRESENT_PERF)
 
 
 def present_perfect_continuous(sent):
@@ -113,7 +117,7 @@ def present_perfect_continuous(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form not in [VerbForm.PRESENT_PART]:
         return None
@@ -132,14 +136,14 @@ def present_perfect_continuous(sent):
     if have_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
         return None
     
-    found_verbs.append((have_form, have_obj))
+    found_verbs.append((auxes[0], have_form, have_obj))
     
     if be_form != VerbForm.PAST_PART:
         return None
     
-    found_verbs.append((be_form, be_obj))
+    found_verbs.append((auxes[1], be_form, be_obj))
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PRESENT_PERF_CONT)
 
 
 def past_simple(sent):
@@ -152,7 +156,7 @@ def past_simple(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
@@ -162,7 +166,7 @@ def past_simple(sent):
 
     if len(auxes) == 1 and auxes[0].lemma_ == "do":
         aux_form, aux_obj = findVerb(auxes[0])
-        found_verbs.append((aux_form, aux_obj))
+        found_verbs.append((auxes[0], aux_form, aux_obj))
         is_negative_or_question = aux_form == VerbForm.PAST and root_form == VerbForm.BASE
     
     is_past_simple = with_main_verb_be or (is_positive or is_negative_or_question)
@@ -170,7 +174,7 @@ def past_simple(sent):
     if not is_past_simple:
         return None
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PAST)
 
 
 def past_continuous(sent):
@@ -183,7 +187,7 @@ def past_continuous(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
         return None
@@ -197,12 +201,12 @@ def past_continuous(sent):
         return None
     
     aux_form, aux_obj = findVerb(auxes[0])
-    found_verbs.append((aux_form, aux_obj))
+    found_verbs.append((auxes[0], aux_form, aux_obj))
 
     if aux_form != VerbForm.PAST:
         return None
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PAST_CONT)
 
 
 def past_perfect(sent):
@@ -215,7 +219,7 @@ def past_perfect(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.PAST_PART:
         return None
@@ -229,12 +233,12 @@ def past_perfect(sent):
         return None
 
     aux_form, aux_obj = findVerb(auxes[0])
-    found_verbs.append((aux_form, aux_obj))
+    found_verbs.append((auxes[0], aux_form, aux_obj))
 
     if aux_form != VerbForm.PAST:
         return None
     
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PAST_PERF)
 
 
 def past_perfect_continuous(sent):
@@ -247,7 +251,7 @@ def past_perfect_continuous(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
         return None
@@ -261,15 +265,15 @@ def past_perfect_continuous(sent):
         return None
     
     have_form, have_obj = findVerb(auxes[0])
-    found_verbs.append((have_form, have_obj))
+    found_verbs.append((auxes[0], have_form, have_obj))
 
     be_form, be_obj = findVerb(auxes[1])
-    found_verbs.append((be_form, be_obj))
+    found_verbs.append((auxes[1], be_form, be_obj))
 
     if have_form != VerbForm.PAST or be_form != VerbForm.PAST_PART:
         return None
     
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.PAST_PERF_CONT)
 
 
 def future_simple(sent):
@@ -282,7 +286,7 @@ def future_simple(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.BASE:
         return None
@@ -295,7 +299,7 @@ def future_simple(sent):
     if auxes[0].lemma_ != "will":
         return None
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.FUTURE)
 
 
 def future_continuous(sent):
@@ -308,7 +312,7 @@ def future_continuous(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
         return None
@@ -321,7 +325,7 @@ def future_continuous(sent):
     if auxes[0].norm_ != "will" or auxes[1].norm_ != "be":
         return None
 
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.FUTURE_CONT)
 
 
 def future_perfect(sent):
@@ -334,7 +338,7 @@ def future_perfect(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.PAST_PART:
         return None
@@ -347,7 +351,7 @@ def future_perfect(sent):
     if auxes[0].norm_ != "will" or auxes[1].norm_ != "have":
         return None
     
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.FUTURE_PERF)
 
 
 def future_perfect_continuous(sent):
@@ -360,7 +364,7 @@ def future_perfect_continuous(sent):
         return None
     
     root_form, root_obj = findVerb(root)
-    found_verbs = [(root_form, root_obj)]
+    found_verbs = [(root, root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
         return None
@@ -373,11 +377,36 @@ def future_perfect_continuous(sent):
     if auxes[0].norm_ != "will" or auxes[1].norm_ != "have" or auxes[2].norm_ != "been":
         return None
     
-    return gen_sentence_tasks(found_verbs)
+    return gen_sentence_tasks(found_verbs, Tense.FUTURE_PERF_CONT)
 
 
-def gen_sentence_tasks(args: list[tuple]) -> list:
-    return []
+def gen_sentence_tasks(args: list[tuple], tense: Tense) -> list:
+    
+    def gen_answers(token: str, options: list[str]) -> list:
+        for i in range(len(options)):
+            if token.lower() == options[i].lower():
+                return [str(i)]
+
+
+    now = datetime.now(tz.tzutc()).isoformat()
+    tasks = []
+    for token, _, obj in args:
+        sent = token.sent
+        id = hashlib.sha256(bytes(str(sent) + token.text + "matching", 'utf-8')).hexdigest()[:24]
+        options = sorted(set(verb for _, verb in obj))
+        
+        tokens = []
+        for t in sent:
+            if token == t:
+                tokens.append(PARALLEL([TOKEN(o, t.whitespace_) for o in options]))
+            else:
+                tokens.append(TOKEN(t.text, t.whitespace_))
+        
+        answers = gen_answers(token.text, options)
+
+        tasks.append(MATCHING(id, now, tokens, tense, answers))
+
+    return tasks
 
 
 def verify(docs) -> bool:
@@ -450,22 +479,23 @@ def generate(docs):
         
         assert cnt == 1
     
-    print("Got tasks:", len(tasks))
+    return tasks
 
 
 if __name__ == "__main__":
     print("Loading docs")
+    PICKLED_DOCS_PATH = "/tmp/docs.pickle"
 
     docs = []
-    if os.path.exists("/tmp/docs.tmp"):
-        with open("/tmp/docs.tmp", mode="br") as f:
+    if os.path.exists(PICKLED_DOCS_PATH):
+        with open(PICKLED_DOCS_PATH, mode="br") as f:
             docs = pickle.loads(f.read())
     else:
         for source, tense in all_sources:
             with (open(source, mode="r")) as f:
                 docs.extend((doc, tense) for doc in nlp.pipe(line.strip() for line in f))
     
-        with open("/tmp/docs.tmp", mode="bw") as f:
+        with open(PICKLED_DOCS_PATH, mode="bw") as f:
             f.write(pickle.dumps(docs, pickle.HIGHEST_PROTOCOL))
     
     print("Loaded docs:", len(docs))
@@ -478,5 +508,12 @@ if __name__ == "__main__":
         print("Verified OK")
     
     print("Generating")
-    generate(docs)
-    print("Generating OK")
+    tasks = generate(docs)
+    
+    if len(tasks) > 0:
+        with open("tasks.json", mode="w") as f:
+            f.write(json.dumps(tasks))
+        
+        subprocess.check_output(["mongoimport", "--jsonArray", "--upsert", "-ctasks", "mongodb://localhost/engapp", "./tasks.json"])
+
+        print("Generating OK")

@@ -18,6 +18,9 @@ class Tense(Enum):
     FUTURE_PERF = 10,
     FUTURE_PERF_CONT = 11,
 
+    def __repr__(self) -> str:
+        return self.name
+
 
 all_sources = [
     ("data/present_simple.txt", Tense.PRESENT),
@@ -42,6 +45,9 @@ class VerbForm(Enum):
     PRESENT_PART = 3
     PAST = 4
     PAST_PART = 5
+
+    def __repr__(self) -> str:
+        return self.name
 
 
 class VerbsObj():
@@ -206,11 +212,14 @@ def nextTaskId():
     return taskId - 1
 
 
-def MATCHING(sentence: list):
+def MATCHING(id: str, date: str, sentence: list, tense: Tense, answers: list[str]):
     return {
+        "_id": {"$oid": id},
+        "_date": {"$date": date},
         "type": "matching",
         "sentence": sentence,
-        "answers": None,
+        "tense": tense.name,
+        "answers": answers,
     }
 
 
@@ -219,12 +228,12 @@ def TOKEN(text: str, ws: str):
     return {"type": "exact", "text": text, **wsParam}
 
 
-def PARALLEL(*args):
-    return {"type": "parallel", "children": args}
+def PARALLEL(tokens: list):
+    return {"type": "parallel", "children": tokens}
 
 
-def SEQ(*args):
-    return {"type": "seq", "children": args}
+def SEQ(tokens: list):
+    return {"type": "seq", "children": tokens}
 
 
 verbs = load_verbs_list()

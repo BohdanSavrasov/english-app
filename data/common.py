@@ -4,19 +4,34 @@ from spacy import displacy
 from enum import Enum
 
 
+class Tense(Enum):
+    PRESENT = 0,
+    PRESENT_CONT = 1,
+    PRESENT_PERF = 2,
+    PRESENT_PERF_CONT = 3,
+    PAST = 4,
+    PAST_CONT = 5,
+    PAST_PERF = 6,
+    PAST_PERF_CONT = 7,
+    FUTURE = 8,
+    FUTURE_CONT = 9,
+    FUTURE_PERF = 10,
+    FUTURE_PERF_CONT = 11,
+
+
 all_sources = [
-    "data/present_simple.txt",
-    "data/present_continuous.txt",
-    "data/present_perfect.txt",
-    "data/present_perfect_cont.txt",
-    "data/past_simple.txt",
-    "data/past_continuous.txt",
-    "data/past_perfect.txt",
-    "data/past_perfect_continuous.txt",
-    "data/future_simple.txt",
-    "data/future_perfect.txt",
-    "data/future_continuous.txt",
-    "data/future_perfect_continuous.txt",
+    ("data/present_simple.txt", Tense.PRESENT),
+    ("data/present_continuous.txt", Tense.PRESENT_CONT),
+    ("data/present_perfect.txt", Tense.PRESENT_PERF),
+    ("data/present_perfect_cont.txt", Tense.PRESENT_PERF_CONT),
+    ("data/past_simple.txt", Tense.PAST),
+    ("data/past_continuous.txt", Tense.PAST_CONT),
+    ("data/past_perfect.txt", Tense.PAST_PERF),
+    ("data/past_perfect_continuous.txt", Tense.PAST_PERF_CONT),
+    ("data/future_simple.txt", Tense.FUTURE),
+    ("data/future_perfect.txt", Tense.FUTURE_PERF),
+    ("data/future_continuous.txt", Tense.FUTURE_CONT),
+    ("data/future_perfect_continuous.txt", Tense.FUTURE_PERF_CONT),
 ]
 
 
@@ -84,7 +99,7 @@ class VerbsObj():
 
     def __repr__(self):
         return self.__str__()
-    
+
     def hasVerbInForm(self, verb: str, form: VerbForm) -> bool:
         if form == VerbForm.BASE:
             return verb in self.base
@@ -98,7 +113,7 @@ class VerbsObj():
             return verb in self.past
         elif form == VerbForm.PAST_PART:
             return verb in self.past_part
-        
+
         raise KeyError("No such key supported")
 
 
@@ -133,10 +148,10 @@ def findVerb(token: spacy.tokens.token.Token):
 
     if token.lower_ == "did" and token.lemma_ == "do":
         norm = "did"
-    
+
     if token.lower_ == "had" and token.lemma_ == "have":
         norm = "had"
-    
+
     if token.lower_ == "'s" and token.lemma_ == "be":
         norm = "is"
 
@@ -153,7 +168,8 @@ def findVerb(token: spacy.tokens.token.Token):
         form = VerbForm.THIRDP
 
     if norm not in verbs:
-        raise Exception(f"Verb '{norm}' is not in list. Sentence: '{token.sent.text}'")
+        raise Exception(
+            f"Verb '{norm}' is not in list. Sentence: '{token.sent.text}'")
 
     verbObjSet = verbs[norm]
 
@@ -177,7 +193,7 @@ def show(text):
             print(token.text, token.tag_, vbform)
         else:
             print(token.text, token.tag_)
-        
+
     displacy.serve(doc)
 
 

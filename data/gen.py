@@ -1,142 +1,158 @@
 from common import *
+import pickle
+import os
 
 
-def is_present_simple(sent):
+def present_simple(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
 
     if not root.tag_.startswith("VB"):
-        return False
+        return None
 
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
-        return False
+        return None
 
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) > 1:
-        return False
+        return None
 
     if len(auxes) == 1:
         if auxes[0].lemma_ != "do":
-            return False
+            return None
         
         aux_form, aux_obj = findVerb(auxes[0])
 
         if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
-            return False
+            return None
+        
+        found_verbs.append((aux_form, aux_obj))
 
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_present_continuous(sent):
+def present_continuous(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
 
     if not root.tag_.startswith("VB"):
-        return False
+        return None
 
-    form, obj = findVerb(root)
+    root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
-    if form != VerbForm.PRESENT_PART:
-        return False
+    if root_form != VerbForm.PRESENT_PART:
+        return None
 
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) > 1:
-        return False
+        return None
 
     if len(auxes) == 1:
         if auxes[0].lemma_ != "be":
-            return False
+            return None
 
         aux_form, aux_obj = findVerb(auxes[0])
 
         if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
-            return False
+            return None
+        
+        found_verbs.append((aux_form, aux_obj))
 
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_present_perfect(sent):
+def present_perfect(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form not in [VerbForm.PAST_PART]:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 1:
-        return False
+        return None
     
     if auxes[0].lemma_ != 'have':
-        return False
+        return None
 
     aux_form, aux_obj = findVerb(auxes[0])
+    found_verbs.append([(aux_form, aux_obj)])
 
     if aux_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
-        return False
+        return None
 
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_present_perfect_continuous(sent):
+def present_perfect_continuous(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form not in [VerbForm.PRESENT_PART]:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 2:
-        return False
+        return None
     
     if not (auxes[0].lemma_ == "have" and auxes[1].lemma_ == "be"):
-        return False
+        return None
     
     have_form, have_obj = findVerb(auxes[0])
     be_form, be_obj = findVerb(auxes[1])
 
     if have_form not in [VerbForm.BASE, VerbForm.NONTHIRDP, VerbForm.THIRDP]:
-        return False
+        return None
+    
+    found_verbs.append((have_form, have_obj))
     
     if be_form != VerbForm.PAST_PART:
-        return False
+        return None
     
-    return True
+    found_verbs.append((be_form, be_obj))
+
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_past_simple(sent):
+def past_simple(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
@@ -146,264 +162,321 @@ def is_past_simple(sent):
 
     if len(auxes) == 1 and auxes[0].lemma_ == "do":
         aux_form, aux_obj = findVerb(auxes[0])
+        found_verbs.append((aux_form, aux_obj))
         is_negative_or_question = aux_form == VerbForm.PAST and root_form == VerbForm.BASE
     
     is_past_simple = with_main_verb_be or (is_positive or is_negative_or_question)
 
     if not is_past_simple:
-        return False
+        return None
 
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_past_continuous(sent):
+def past_continuous(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
-        return False
+        return None
 
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 1:
-        return False
+        return None
     
     if auxes[0].lemma_ != "be":
-        return False
+        return None
     
     aux_form, aux_obj = findVerb(auxes[0])
+    found_verbs.append((aux_form, aux_obj))
 
     if aux_form != VerbForm.PAST:
-        return False
+        return None
 
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_past_perfect(sent):
+def past_perfect(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form != VerbForm.PAST_PART:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 1:
-        return False
+        return None
     
     if auxes[0].lemma_ != "have":
-        return False
+        return None
 
     aux_form, aux_obj = findVerb(auxes[0])
+    found_verbs.append((aux_form, aux_obj))
 
     if aux_form != VerbForm.PAST:
-        return False
+        return None
     
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_past_perfect_continuous(sent):
+def past_perfect_continuous(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 2:
-        return False
+        return None
     
     if not (auxes[0].lemma_ == "have" and auxes[1].lemma_ == "be"):
-        return False
+        return None
     
     have_form, have_obj = findVerb(auxes[0])
+    found_verbs.append((have_form, have_obj))
+
     be_form, be_obj = findVerb(auxes[1])
+    found_verbs.append((be_form, be_obj))
 
     if have_form != VerbForm.PAST or be_form != VerbForm.PAST_PART:
-        return False
+        return None
     
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_future_simple(sent):
+def future_simple(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form != VerbForm.BASE:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 1:
-        return False
+        return None
     
     if auxes[0].lemma_ != "will":
-        return False
+        return None
 
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_future_continuous(sent):
+def future_continuous(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 2:
-        return False
+        return None
     
     if auxes[0].norm_ != "will" or auxes[1].norm_ != "be":
-        return False
+        return None
 
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_future_perfect(sent):
+def future_perfect(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form != VerbForm.PAST_PART:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 2:
-        return False
+        return None
     
     if auxes[0].norm_ != "will" or auxes[1].norm_ != "have":
-        return False
+        return None
     
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def is_future_perfect_continuous(sent):
+def future_perfect_continuous(sent):
     root = sent.root
 
     if root is None:
-        return False
+        return None
     
     if not root.tag_.startswith("VB"):
-        return False
+        return None
     
     root_form, root_obj = findVerb(root)
+    found_verbs = [(root_form, root_obj)]
 
     if root_form != VerbForm.PRESENT_PART:
-        return False
+        return None
     
     auxes = [t for t in root.children if t.dep_ == "aux"]
 
     if len(auxes) != 3:
-        return False
+        return None
     
     if auxes[0].norm_ != "will" or auxes[1].norm_ != "have" or auxes[2].norm_ != "been":
-        return False
+        return None
     
-    return True
+    return gen_sentence_tasks(found_verbs)
 
 
-def handle(sent, source):
-    def test(func, sent, current_source: str, task_source: str, tag: str):
-        res = func(sent)
-
-        if res == False and current_source == task_source:
-            print(tag, sent, current_source, "False")
-            return False
-
-        if res == True and current_source != task_source:
-            print(tag, sent, current_source, "True")
-            return False
-
-        return True
-
-    global wrong_cnt
-
-    res = test(is_present_simple, sent, source, "data/present_simple.txt", "PRESENT_SIMPLE")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_present_continuous, sent, source, "data/present_continuous.txt", "PRESENT_CONTINUOUS")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_present_perfect, sent, source, "data/present_perfect.txt", "PRESENT_PERFECT")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_present_perfect_continuous, sent, source, "data/present_perfect_cont.txt", "PRESENT_PERFECT_CONTINUOUS")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_past_simple, sent, source, "data/past_simple.txt", "PAST_SIMPLE")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_past_continuous, sent, source, "data/past_continuous.txt", "PAST_CONTINUOUS")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_past_perfect, sent, source, "data/past_perfect.txt", "PAST_PERFECT")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_past_perfect_continuous, sent, source, "data/past_perfect_continuous.txt", "PAST_PERFECT_CONTINUOUS")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_future_simple, sent, source, "data/future_simple.txt", "FUTURE_SIMPLE")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_future_continuous, sent, source, "data/future_continuous.txt", "FUTURE_CONTINUOUS")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_future_perfect, sent, source, "data/future_perfect.txt", "FUTURE_PERFECT")
-    wrong_cnt += 0 if res else 1
-
-    res = test(is_future_perfect_continuous, sent, source, "data/future_perfect_continuous.txt", "FUTURE_PERFECT_CONTINUOUS")
-    wrong_cnt += 0 if res else 1
+def gen_sentence_tasks(args: list[tuple]) -> list:
+    return []
 
 
-wrong_cnt = 0
-for source in all_sources:
-    with (open(source, mode="r")) as f:
-        for line in f:
-            handle(next(nlp(line.strip()).sents), source)
+def verify(docs) -> bool:
+    wrong_cnt = 0
 
-print("Wrong detections count:", wrong_cnt)
+    def verify_sentence(sent, tense):
+        def test(func, sent, sentence_tense: Tense, expected_tense: Tense) -> int:
+            res = func(sent)
+
+            if res is None and sentence_tense == expected_tense:
+                print(sentence_tense.name, sent, expected_tense.name, "False")
+                return 1
+
+            if res is not None and sentence_tense != expected_tense:
+                print(sentence_tense.name, sent, expected_tense.name, "True")
+                return 1
+
+            return 0
+        
+        nonlocal wrong_cnt
+
+        wrong_cnt += test(present_simple, sent, tense, Tense.PRESENT)
+        wrong_cnt += test(present_continuous, sent, tense, Tense.PRESENT_CONT)
+        wrong_cnt += test(present_perfect, sent, tense, Tense.PRESENT_PERF)
+        wrong_cnt += test(present_perfect_continuous, sent, tense, Tense.PRESENT_PERF_CONT)
+        wrong_cnt += test(past_simple, sent, tense, Tense.PAST)
+        wrong_cnt += test(past_continuous, sent, tense, Tense.PAST_CONT)
+        wrong_cnt += test(past_perfect, sent, tense, Tense.PAST_PERF)
+        wrong_cnt += test(past_perfect_continuous, sent, tense, Tense.PAST_PERF_CONT)
+        wrong_cnt += test(future_simple, sent, tense, Tense.FUTURE)
+        wrong_cnt += test(future_continuous, sent, tense, Tense.FUTURE_CONT)
+        wrong_cnt += test(future_perfect, sent, tense, Tense.FUTURE_PERF)
+        wrong_cnt += test(future_perfect_continuous, sent, tense, Tense.FUTURE_PERF_CONT)
+    
+    for doc, tense in docs:
+        verify_sentence(next(doc.sents), tense)
+
+    return wrong_cnt
+
+
+def generate(docs):
+    funcs = [
+        present_simple,
+        present_continuous,
+        present_perfect,
+        present_perfect_continuous,
+        past_simple,
+        past_continuous,
+        past_perfect,
+        past_perfect_continuous,
+        future_simple,
+        future_continuous,
+        future_perfect,
+        future_perfect_continuous,
+    ]
+
+    assert len(funcs) == 12
+
+    tasks = []
+    
+    for doc, _ in docs:
+        sent = next(doc.sents)
+        cnt = 0
+        
+        for func in funcs:
+            res = func(sent)
+            if res is not None:
+                tasks.extend(res)
+                cnt += 1
+        
+        assert cnt == 1
+    
+    print("Got tasks:", len(tasks))
+
+
+if __name__ == "__main__":
+    print("Loading docs")
+
+    docs = []
+    if os.path.exists("/tmp/docs.tmp"):
+        with open("/tmp/docs.tmp", mode="br") as f:
+            docs = pickle.loads(f.read())
+    else:
+        for source, tense in all_sources:
+            with (open(source, mode="r")) as f:
+                docs.extend((doc, tense) for doc in nlp.pipe(line.strip() for line in f))
+    
+        with open("/tmp/docs.tmp", mode="bw") as f:
+            f.write(pickle.dumps(docs, pickle.HIGHEST_PROTOCOL))
+    
+    print("Loaded docs:", len(docs))
+    print("Verifying")
+    wrong_cnt = verify(docs)
+    if wrong_cnt != 0:
+        print("Wrong detections count:", wrong_cnt)
+        exit()
+    else:
+        print("Verified OK")
+    
+    print("Generating")
+    generate(docs)
+    print("Generating OK")
